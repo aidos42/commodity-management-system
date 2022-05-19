@@ -1,6 +1,6 @@
 # Commodity managment system
 
-![Actions Status](https://github.com/aidos42/commodity-management-system/actions/workflows/main/badge.svg)
+[![Actions Status](https://github.com/aidos42/commodity-management-system/workflows/Main/badge.svg)](https://github.com/aidos42/commodity-management-system/actions)
 
 ## Description
 
