@@ -6,7 +6,4 @@ export class CommodityDto {
 
   @IsNumber()
   readonly price: number;
-
-  @IsString()
-  readonly id: string;
 }

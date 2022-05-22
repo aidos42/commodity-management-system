@@ -3,10 +3,12 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
+import { Commodity } from './commodity.entity';
 import { CommoditiesService } from './commodities.service';
 import { CommodityDto } from './dto/commodity.dto';
 
@@ -15,30 +17,49 @@ export class CommoditiesController {
   constructor(private readonly commoditiesService: CommoditiesService) {}
 
   @Get()
-  getAll(): CommodityDto[] {
-    return this.commoditiesService.getAll();
+  getAll(): Promise<Commodity[]> {
+    return this.commoditiesService.findAll();
   }
 
   @Get(':id')
-  getById(@Param('id') id: string): CommodityDto {
-    return this.commoditiesService.getById(id);
+  async getById(@Param('id') id: string): Promise<Commodity> {
+    const commodity = await this.commoditiesService.findOne(id);
+
+    if (commodity === undefined) {
+      throw new NotFoundException(`Commodity with id: ${id} not exists`);
+    }
+
+    return commodity;
   }
 
   @Post()
-  create(@Body() commodityDto: CommodityDto): CommodityDto {
-    return this.commoditiesService.create(commodityDto);
-  }
+  create(@Body() commodityDto: CommodityDto): Promise<Commodity> {
+    const commodity = new Commodity();
+    commodity.title = commodityDto.title;
+    commodity.price = commodityDto.price;
 
-  @Delete(':id')
-  remove(@Param('id') id: string): string {
-    return `Remove ${id} commodity`;
+    return this.commoditiesService.create(commodity);
   }
 
   @Put(':id')
-  update(
+  async update(
     @Body() updateCommodityDto: CommodityDto,
     @Param('id') id: string,
-  ): string {
-    return `Update commodity ${updateCommodityDto.title} with id ${id}`;
+  ): Promise<Commodity> {
+    const commodity = await this.commoditiesService.findOne(id);
+
+    if (commodity === undefined) {
+      throw new NotFoundException(`Commodity with id: ${id} not exists`);
+    }
+
+    commodity.title = updateCommodityDto.title;
+    commodity.price = updateCommodityDto.price;
+
+    return this.commoditiesService.update(commodity);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string): Promise<void> {
+    return this.commoditiesService.remove(id);
   }
 }

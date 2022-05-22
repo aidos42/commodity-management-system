@@ -1,37 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { CommodityDto } from './dto/commodity.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Commodity } from './commodity.entity';
 
 @Injectable()
 export class CommoditiesService {
-  private commodities: CommodityDto[] = [
-    {
-      title: 'bom',
-      price: 42,
-      id: '0',
-    },
-    {
-      title: 'bam',
-      price: 1764,
-      id: '1',
-    },
-    {
-      title: 'bim',
-      price: 3111696,
-      id: '2',
-    },
-  ];
+  constructor(
+    @InjectRepository(Commodity)
+    private commoditiesRepository: Repository<Commodity>,
+  ) {}
 
-  getAll(): CommodityDto[] {
-    return this.commodities;
+  findAll(): Promise<Commodity[]> {
+    return this.commoditiesRepository.find();
   }
 
-  getById(id: string): CommodityDto {
-    return this.commodities.find((c) => c.id === id);
+  findOne(id: string): Promise<Commodity> {
+    return this.commoditiesRepository.findOne(id);
   }
 
-  create(commodityDto: CommodityDto): CommodityDto {
-    this.commodities.push(commodityDto);
+  create(commodity: Commodity): Promise<Commodity> {
+    return this.commoditiesRepository.save(commodity);
+  }
 
-    return commodityDto;
+  async update(commodity: Commodity): Promise<Commodity> {
+    return this.commoditiesRepository.save(commodity);
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.commoditiesRepository.delete(id);
   }
 }
