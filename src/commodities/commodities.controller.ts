@@ -11,17 +11,29 @@ import {
 import { Commodity } from './commodity.entity';
 import { CommoditiesService } from './commodities.service';
 import { CommodityDto } from './dto/commodity.dto';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@Controller('commodities')
+@ApiTags('commodities')
+@Controller('api/commodities')
 export class CommoditiesController {
   constructor(private readonly commoditiesService: CommoditiesService) {}
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'get all commodities',
+    type: [Commodity],
+  })
   getAll(): Promise<Commodity[]> {
     return this.commoditiesService.findAll();
   }
 
   @Get(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'get commodity by id',
+    type: Commodity,
+  })
   async getById(@Param('id') id: string): Promise<Commodity> {
     const commodity = await this.commoditiesService.findOne(id);
 
@@ -33,6 +45,12 @@ export class CommoditiesController {
   }
 
   @Post()
+  @ApiResponse({
+    status: 201,
+    description: 'create commodity',
+    type: Commodity,
+  })
+  @ApiBody({ type: CommodityDto })
   create(@Body() commodityDto: CommodityDto): Promise<Commodity> {
     const commodity = new Commodity();
     commodity.title = commodityDto.title;
@@ -42,6 +60,12 @@ export class CommoditiesController {
   }
 
   @Put(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'update commodity by id',
+    type: Commodity,
+  })
+  @ApiBody({ type: CommodityDto })
   async update(
     @Body() updateCommodityDto: CommodityDto,
     @Param('id') id: string,
@@ -59,6 +83,10 @@ export class CommoditiesController {
   }
 
   @Delete(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Remove commodity by id',
+  })
   remove(@Param('id') id: string): Promise<void> {
     return this.commoditiesService.remove(id);
   }

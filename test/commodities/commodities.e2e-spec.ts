@@ -32,7 +32,7 @@ describe('positive cases', () => {
 
   it('should create new commodity by POST', () => {
     return request(app.getHttpServer())
-      .post('/commodities')
+      .post('/api/commodities')
       .send(commodity as CommodityDto)
       .expect(201)
       .then(({ body }) => {
@@ -42,7 +42,7 @@ describe('positive cases', () => {
 
   it('should return all commodities by GET', () => {
     return request(app.getHttpServer())
-      .get('/commodities')
+      .get('/api/commodities')
       .expect(200)
       .then(({ body }) => {
         expect(body).toBeDefined();
@@ -51,7 +51,7 @@ describe('positive cases', () => {
 
   it('should one commodity by GET', () => {
     return request(app.getHttpServer())
-      .get('/commodities/1')
+      .get('/api/commodities/1')
       .expect(200)
       .then(({ body }) => {
         expect(body).toBeDefined();
