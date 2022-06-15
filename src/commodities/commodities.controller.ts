@@ -7,11 +7,12 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { Commodity } from './commodity.entity';
 import { CommoditiesService } from './commodities.service';
 import { CommodityDto } from './dto/commodity.dto';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('commodities')
 @Controller('api/commodities')
@@ -21,11 +22,16 @@ export class CommoditiesController {
   @Get()
   @ApiResponse({
     status: 200,
-    description: 'get all commodities',
+    description: 'get all commodities or filtered by price',
     type: [Commodity],
   })
-  getAll(): Promise<Commodity[]> {
-    return this.commoditiesService.findAll();
+  @ApiQuery({ name: 'price', required: false })
+  getAll(@Query() query: { price: string }): Promise<Commodity[]> {
+    if (query.price === undefined) {
+      return this.commoditiesService.findAll();
+    }
+
+    return this.commoditiesService.findByPrice(Number(query.price));
   }
 
   @Get(':id')

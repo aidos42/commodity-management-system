@@ -18,6 +18,11 @@ export class CommoditiesService {
     return this.commoditiesRepository.findOne(id);
   }
 
+  async findByPrice(price: number): Promise<Commodity[]> {
+    const commodities = await this.commoditiesRepository.find();
+    return commodities.filter((commodity) => commodity.price === price);
+  }
+
   create(commodity: Commodity): Promise<Commodity> {
     return this.commoditiesRepository.save(commodity);
   }
