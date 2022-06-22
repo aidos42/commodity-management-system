@@ -61,6 +61,7 @@ export class CommoditiesController {
     const commodity = new Commodity();
     commodity.title = commodityDto.title;
     commodity.price = commodityDto.price;
+    commodity.type = commodityDto.type;
 
     return this.commoditiesService.create(commodity);
   }
@@ -84,6 +85,7 @@ export class CommoditiesController {
 
     commodity.title = updateCommodityDto.title;
     commodity.price = updateCommodityDto.price;
+    commodity.type = updateCommodityDto.type;
 
     return this.commoditiesService.update(commodity);
   }

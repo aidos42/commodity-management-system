@@ -9,6 +9,7 @@ describe('positive cases', () => {
   const commodity = {
     title: 'mucguffin',
     price: 42,
+    type: 'muffin',
   };
 
   let app: INestApplication;

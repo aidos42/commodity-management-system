@@ -9,4 +9,8 @@ export class CommodityDto {
   @ApiProperty()
   @IsNumber()
   readonly price: number;
+
+  @ApiProperty()
+  @IsString()
+  readonly type: string;
 }

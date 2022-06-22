@@ -14,4 +14,8 @@ export class Commodity {
   @ApiProperty()
   @Column()
   price: number;
+
+  @ApiProperty()
+  @Column()
+  type: string;
 }
