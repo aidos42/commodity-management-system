@@ -1,0 +1,5 @@
+node_modules
+.git
+Dockerfile
+database.sqlite
+dist
