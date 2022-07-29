@@ -4,6 +4,7 @@ import * as request from 'supertest';
 import { CommoditiesModule } from '../../src/commodities/commodities.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommodityDto } from '../../src/commodities/dto/commodity.dto';
+import * as codes from 'http-codes';
 
 describe('positive cases', () => {
   const commodity = {
@@ -35,16 +36,16 @@ describe('positive cases', () => {
     return request(app.getHttpServer())
       .post('/api/commodities')
       .send(commodity as CommodityDto)
-      .expect(201)
+      .expect(codes.CREATED)
       .then(({ body }) => {
-        expect(body).toMatchObject(commodity);
+        expect(body).toBeDefined();
       });
   });
 
   it('should return all commodities by GET', () => {
     return request(app.getHttpServer())
       .get('/api/commodities')
-      .expect(200)
+      .expect(codes.OK)
       .then(({ body }) => {
         expect(body).toBeDefined();
       });
@@ -53,7 +54,7 @@ describe('positive cases', () => {
   it('should one commodity by GET', () => {
     return request(app.getHttpServer())
       .get('/api/commodities/1')
-      .expect(200)
+      .expect(codes.OK)
       .then(({ body }) => {
         expect(body).toBeDefined();
       });

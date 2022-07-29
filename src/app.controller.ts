@@ -7,6 +7,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return this.appService.getHello();
+    //TODO: a simple implementation of page to show commodities
+    return this.appService.index();
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { InsertResult, Repository } from 'typeorm';
 import { Commodity } from './commodity.entity';
 
 @Injectable()
@@ -18,13 +18,17 @@ export class CommoditiesService {
     return this.commoditiesRepository.findOne(id);
   }
 
-  async findByPrice(price: number): Promise<Commodity[]> {
-    const commodities = await this.commoditiesRepository.find();
-    return commodities.filter((commodity) => commodity.price === price);
+  async findByPrice(desiredPrice: number): Promise<Commodity[]> {
+    const commodities = await this.commoditiesRepository.find({
+      where: {
+        price: desiredPrice,
+      },
+    });
+    return commodities;
   }
 
-  create(commodity: Commodity): Promise<Commodity> {
-    return this.commoditiesRepository.save(commodity);
+  async create(commodity: Commodity): Promise<InsertResult> {
+    return this.commoditiesRepository.insert(commodity);
   }
 
   async update(commodity: Commodity): Promise<Commodity> {

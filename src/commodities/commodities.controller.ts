@@ -8,11 +8,15 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { Commodity } from './commodity.entity';
 import { CommoditiesService } from './commodities.service';
 import { CommodityDto } from './dto/commodity.dto';
 import { ApiBody, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { InsertResult } from 'typeorm';
+import * as codes from 'http-codes';
+import { PayloadExistance } from './payloadExistance.guard';
 
 @ApiTags('commodities')
 @Controller('api/commodities')
@@ -21,7 +25,7 @@ export class CommoditiesController {
 
   @Get()
   @ApiResponse({
-    status: 200,
+    status: codes.OK,
     description: 'get all commodities or filtered by price',
     type: [Commodity],
   })
@@ -36,7 +40,7 @@ export class CommoditiesController {
 
   @Get(':id')
   @ApiResponse({
-    status: 200,
+    status: codes.OK,
     description: 'get commodity by id',
     type: Commodity,
   })
@@ -52,12 +56,13 @@ export class CommoditiesController {
 
   @Post()
   @ApiResponse({
-    status: 201,
+    status: codes.CREATED,
     description: 'create commodity',
     type: Commodity,
   })
   @ApiBody({ type: CommodityDto })
-  create(@Body() commodityDto: CommodityDto): Promise<Commodity> {
+  @UseGuards(PayloadExistance)
+  async create(@Body() commodityDto: CommodityDto): Promise<InsertResult> {
     const commodity = new Commodity();
     commodity.title = commodityDto.title;
     commodity.price = commodityDto.price;
@@ -68,20 +73,17 @@ export class CommoditiesController {
 
   @Put(':id')
   @ApiResponse({
-    status: 200,
+    status: codes.OK,
     description: 'update commodity by id',
     type: Commodity,
   })
   @ApiBody({ type: CommodityDto })
+  @UseGuards(PayloadExistance)
   async update(
     @Body() updateCommodityDto: CommodityDto,
     @Param('id') id: string,
   ): Promise<Commodity> {
     const commodity = await this.commoditiesService.findOne(id);
-
-    if (commodity === undefined) {
-      throw new NotFoundException(`Commodity with id: ${id} not exists`);
-    }
 
     commodity.title = updateCommodityDto.title;
     commodity.price = updateCommodityDto.price;
@@ -92,7 +94,7 @@ export class CommoditiesController {
 
   @Delete(':id')
   @ApiResponse({
-    status: 200,
+    status: codes.OK,
     description: 'Remove commodity by id',
   })
   remove(@Param('id') id: string): Promise<void> {

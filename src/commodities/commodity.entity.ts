@@ -8,14 +8,14 @@ export class Commodity {
   id: number;
 
   @ApiProperty()
-  @Column()
+  @Column('varchar')
   title: string;
 
   @ApiProperty()
-  @Column()
+  @Column('integer')
   price: number;
 
   @ApiProperty()
-  @Column()
+  @Column('varchar')
   type: string;
 }
